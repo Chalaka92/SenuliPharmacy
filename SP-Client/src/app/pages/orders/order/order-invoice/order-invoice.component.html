@@ -1,0 +1,165 @@
+<div id="print-section" class="invoicePrint">
+  <div mat-dialog-title class="invoice-logo">
+    <img src="../../../assets/img/order_invoice_logo.png" />
+  </div>
+
+  <mat-dialog-content>
+    <div fxLayout="column" fxLayout.gt-sm="row">
+      <div fxLayout="column" style="width: 30%">
+        <table>
+          <tr>
+            <td class="font-bold">Order Code</td>
+            <td class="font-bold">:</td>
+            <td class="item-cell">{{ orderInvoiceDetails.orderCode }}</td>
+          </tr>
+          <tr>
+            <td class="font-bold">Payment Method</td>
+            <td class="font-bold">:</td>
+            <td class="item-cell">Cash</td>
+          </tr>
+        </table>
+      </div>
+      <div fxLayout="column" style="width: 70%; text-align: right">
+        <table style="width: 100%">
+          <tr>
+            <td style="width: 65%" class="font-bold">Date</td>
+            <td class="font-bold">:</td>
+            <td *ngIf="mode === 'create'" class="item-cell">
+              {{
+                orderInvoiceDetails.orderedDate | date: "yyyy/MM/dd hh:mm:ss"
+              }}
+            </td>
+            <td *ngIf="mode === 'update'" class="item-cell">
+              {{ orderInvoiceDetails.editedDate | date: "yyyy/MM/dd hh:mm:ss" }}
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap.gt-sm="24px">
+      <table mat-table [dataSource]="dataSource" class="maxTableWidth">
+        <ng-container matColumnDef="index">
+          <th mat-header-cell *matHeaderCellDef>No.</th>
+          <td
+            mat-cell
+            *matCellDef="let element; let i = index"
+            class="item-cell"
+          >
+            {{ i + 1 }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef>Item(s)</th>
+          <td mat-cell *matCellDef="let element" class="item-cell">
+            {{ element.name }}
+            <br />
+            <span class="item-code">{{ element.itemBatchCode }}</span>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="netPrice">
+          <th mat-header-cell *matHeaderCellDef class="cellRightAlign">
+            Unit Price (Rs.)
+          </th>
+          <td
+            mat-cell
+            *matCellDef="let element"
+            class="cellRightAlign item-cell"
+          >
+            {{ element.netPrice | number: "1.2-2" }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="itemCount">
+          <th mat-header-cell *matHeaderCellDef class="cellRightAlign">
+            Quantity
+          </th>
+          <td
+            mat-cell
+            *matCellDef="let element"
+            class="cellRightAlign item-cell"
+          >
+            {{ element.itemCount }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="totalNetPrice">
+          <th mat-header-cell *matHeaderCellDef class="cellRightAlign">
+            Total (Rs.)
+          </th>
+          <td
+            mat-cell
+            *matCellDef="let element"
+            class="cellRightAlign item-cell"
+          >
+            {{ element.totalNetPrice | number: "1.2-2" }}
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+    </div>
+    <div
+      fxLayout="column"
+      fxLayout.gt-sm="row"
+      fxLayoutGap.gt-sm="24px"
+      fxLayoutAlign="end center"
+    >
+      <table class="total-table">
+        <tr>
+          <td class="cellRightAlign">Sub Total (Rs.)</td>
+          <td class="cellRightAlign">
+            {{ orderInvoiceDetails.totalAmount | number: "1.2-2" }}
+          </td>
+        </tr>
+        <tr>
+          <td class="cellRightAlign">
+            Discount ({{ orderInvoiceDetails.totalBillDiscount }}%)
+          </td>
+          <td class="cellRightAlign">
+            {{ orderInvoiceDetails.totalDiscountAmount | number: "1.2-2" }}
+          </td>
+        </tr>
+        <tr>
+          <td class="cellRightAlign">GRAND TOTAL (Rs.)</td>
+          <td class="cellRightAlign">
+            {{ orderInvoiceDetails.totalNetAmount | number: "1.2-2" }}
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="div-center">
+      <p class="thank-note">THANK YOU FOR YOUR BUSINESS !</p>
+      <hr />
+      <table class="invoice-footer" align="center">
+        <tr>
+          <td class="topValign">
+            <mat-icon class="mat-icon-small">phone_in_talk</mat-icon
+            ><span class="topValign">+94 740 528 831</span><br />
+            <mat-icon class="mat-icon-small">web</mat-icon
+            ><span class="topValign">www.senulipharmacy.com</span><br />
+            <mat-icon class="mat-icon-small">email</mat-icon
+            ><span class="topValign">senulipharmacy@gmail.com</span><br />
+          </td>
+          <td class="topValign">
+            <b>Contact:</b><br />
+            B264, Ridigama
+          </td>
+        </tr>
+      </table>
+    </div>
+  </mat-dialog-content>
+</div>
+<mat-dialog-actions fxLayout="row" fxLayoutAlign="end center">
+  <button
+    mat-button
+    color="primary"
+    printSectionId="print-section"
+    (click)="onPrint()"
+  >
+    PRINT
+  </button>
+</mat-dialog-actions>
+<!-- <button mat-button color="primary" printSectionId="print-section" ngxPrint>
+  PRINT
+</button> -->

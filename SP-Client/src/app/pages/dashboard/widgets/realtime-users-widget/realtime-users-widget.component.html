@@ -1,0 +1,25 @@
+<sp-card class="realtime-users-widget">
+  <sp-card-header class="header" fxLayout="column">
+    <sp-card-header-heading>Active Users right now</sp-card-header-heading>
+
+    <div class="value">{{ currentUsers }}</div>
+  </sp-card-header>
+
+  <sp-card-content>
+    <div class="section">
+      <div class="heading">Page views per minute</div>
+      <div class="canvas-content">
+        <canvas #canvas></canvas>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="heading">Top Active Pages</div>
+      <sp-scrollbar class="pages">
+        <div class="page" *ngFor="let page of pages$ | async">
+          {{ page.page }}
+        </div>
+      </sp-scrollbar>
+    </div>
+  </sp-card-content>
+</sp-card>

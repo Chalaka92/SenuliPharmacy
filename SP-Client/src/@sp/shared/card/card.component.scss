@@ -1,0 +1,78 @@
+@import 'var';
+
+.sp-card {
+  border-radius: $border-radius;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  max-width: 100%;
+}
+
+.sp-card > .mat-tab-group {
+  .mat-tab-label {
+    height: $card-header-height;
+  }
+}
+
+.sp-card-header {
+  padding: $spacing;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  align-content: flex-start;
+  white-space: nowrap;
+  overflow: hidden;
+
+  .sp-card-header-heading-group {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+
+    .sp-card-header-heading {
+      white-space: nowrap;
+      font: var(--font-subheading-2);
+
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: center;
+      align-content: center;
+    }
+
+    .sp-card-header-subheading {
+      white-space: nowrap;
+      font-size: 13px;
+      font: var(--font-body-1);
+    }
+  }
+
+  .sp-card-header-actions {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+    margin-left: $spacing;
+  }
+}
+
+.sp-card-content {
+  padding: 0 $spacing $spacing;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.sp-card-actions {
+  padding: $spacing/3 $spacing/1.5;
+  display: flex;
+  flex-direction: row;
+
+  button + button {
+    margin-left: $spacing/3;
+  }
+
+  &.sp-card-actions-align-end {
+    justify-content: flex-end;
+  }
+}

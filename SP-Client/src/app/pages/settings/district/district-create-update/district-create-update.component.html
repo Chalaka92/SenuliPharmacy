@@ -1,0 +1,42 @@
+<div mat-dialog-title>District</div>
+
+<form [formGroup]="form" (ngSubmit)="save()">
+  <mat-dialog-content>
+    <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap.gt-sm="24px">
+      <mat-form-field fxFlex appearance="standard">
+        <mat-label>Name</mat-label>
+        <input type="text" formControlName="name" matInput required />
+      </mat-form-field>
+    </div>
+    <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap.gt-sm="24px">
+      <mat-form-field fxFlex appearance="standard">
+        <mat-label>Province</mat-label>
+        <mat-select formControlName="provinceId" required>
+          <mat-option
+            *ngFor="let province of provinces"
+            [value]="province.id"
+            >{{ province.name }}</mat-option
+          >
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions fxLayout="row" fxLayoutAlign="end center">
+    <button
+      *ngIf="isCreateMode()"
+      mat-button
+      [disabled]="!form.valid"
+      color="primary"
+    >
+      CREATE
+    </button>
+    <button
+      *ngIf="isUpdateMode()"
+      mat-button
+      [disabled]="!form.valid || form.pristine"
+      color="primary"
+    >
+      UPDATE
+    </button>
+  </mat-dialog-actions>
+</form>

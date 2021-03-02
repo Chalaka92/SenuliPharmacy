@@ -1,0 +1,10 @@
+@import '~@angular/flex-layout/mq';
+
+.sp-page {
+  padding: $padding;
+  display: block;
+
+  @include layout-bp(lt-md) {
+    padding: $padding-md;
+  }
+}

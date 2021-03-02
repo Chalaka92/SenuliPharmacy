@@ -1,0 +1,148 @@
+<div mat-dialog-title>Item Batch</div>
+
+<form [formGroup]="form" (ngSubmit)="save()">
+  <mat-dialog-content>
+    <div
+      fxLayout="column"
+      fxLayout.gt-sm="row"
+      fxLayoutGap.gt-sm="24px"
+      *ngIf="form.value.itemBatchCode"
+    >
+      <mat-form-field fxFlex appearance="standard">
+        <mat-label>Item Batch Code</mat-label>
+        <input type="text" formControlName="itemBatchCode" matInput readonly />
+      </mat-form-field>
+    </div>
+    <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap.gt-sm="24px">
+      <mat-form-field fxFlex appearance="standard">
+        <mat-label>Name</mat-label>
+        <input type="text" formControlName="name" matInput required />
+      </mat-form-field>
+    </div>
+    <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap.gt-sm="24px">
+      <mat-form-field fxFlex appearance="standard">
+        <mat-label>Item</mat-label>
+        <mat-select formControlName="itemId" required>
+          <mat-option *ngFor="let item of items" [value]="item.id">{{
+            item.name
+          }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field fxFlex appearance="standard">
+        <mat-label>Status</mat-label>
+        <mat-select formControlName="itemStatusId" required>
+          <mat-option *ngFor="let status of statuses" [value]="status.id">{{
+            status.name
+          }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap.gt-sm="24px">
+      <mat-form-field fxFlex appearance="standard">
+        <mat-label>Stock Count</mat-label>
+        <input
+          type="number"
+          formControlName="stockCount"
+          (change)="
+            setAllItemCount(form.value.stockCount, form.value.itemCount)
+          "
+          matInput
+          required
+          min="form.value.itemCount"
+        />
+      </mat-form-field>
+      <mat-form-field fxFlex appearance="standard">
+        <mat-label>Available Count</mat-label>
+        <input
+          type="number"
+          formControlName="itemCount"
+          [readonly]="isCreateMode()"
+          (change)="
+            setAllItemCount(form.value.stockCount, form.value.itemCount)
+          "
+          matInput
+          required
+          max="form.value.stockCount"
+        />
+      </mat-form-field>
+      <mat-form-field fxFlex appearance="standard">
+        <mat-label>Reorder Count</mat-label>
+        <input
+          type="number"
+          formControlName="reorderCount"
+          matInput
+          readonly
+          required
+        />
+      </mat-form-field>
+    </div>
+    <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap.gt-sm="24px">
+      <mat-form-field fxFlex appearance="standard">
+        <mat-label>Max Retail Price</mat-label>
+        <input
+          type="text"
+          formControlName="maxRetailPrice"
+          matInput
+          required
+          currencyFormatter
+        />
+      </mat-form-field>
+    </div>
+    <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap.gt-sm="24px">
+      <mat-form-field fxFlex appearance="standard">
+        <mat-label>Manufacture Date</mat-label>
+        <input
+          (click)="formDatepickerManufacture.open()"
+          formControlName="manufactureDate"
+          (focus)="formDatepickerManufacture.open()"
+          [matDatepicker]="formDatepickerManufacture"
+          matInput
+          readonly
+          required
+        />
+        <mat-datepicker-toggle
+          [for]="formDatepickerManufacture"
+          matSuffix
+        ></mat-datepicker-toggle>
+        <mat-hint>Click on the input or the datepicker icon</mat-hint>
+        <mat-datepicker #formDatepickerManufacture></mat-datepicker>
+      </mat-form-field>
+      <mat-form-field fxFlex appearance="standard">
+        <mat-label>Expiry Date</mat-label>
+        <input
+          (click)="formDatepickerExpiry.open()"
+          formControlName="expiryDate"
+          (focus)="formDatepickerExpiry.open()"
+          [matDatepicker]="formDatepickerExpiry"
+          matInput
+          readonly
+          required
+        />
+        <mat-datepicker-toggle
+          [for]="formDatepickerExpiry"
+          matSuffix
+        ></mat-datepicker-toggle>
+        <mat-hint>Click on the input or the datepicker icon</mat-hint>
+        <mat-datepicker #formDatepickerExpiry></mat-datepicker>
+      </mat-form-field>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions fxLayout="row" fxLayoutAlign="end center">
+    <button
+      *ngIf="isCreateMode()"
+      mat-button
+      [disabled]="!form.valid"
+      color="primary"
+    >
+      CREATE
+    </button>
+    <button
+      *ngIf="isUpdateMode()"
+      mat-button
+      [disabled]="!form.valid || form.pristine"
+      color="primary"
+    >
+      UPDATE
+    </button>
+  </mat-dialog-actions>
+</form>

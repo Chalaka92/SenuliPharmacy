@@ -1,0 +1,96 @@
+/* You can add global styles to this file, and also import other style files */
+@import "@sp/styles/core";
+@import "./app/app.theme";
+
+.notif-success {
+  color: #fffffa !important; // green
+  background-color: #8bc475 !important;
+  border-color: #8bc475 !important;
+  font-weight: bold !important;
+  .mat-simple-snackbar-action {
+    color: #fffffa !important;
+    font-weight: bold !important;
+  }
+}
+
+.notif-error {
+  color: #fffffa !important;
+  background-color: #ff7676 !important;
+  border-color: #ff7676 !important;
+  font-weight: bold !important;
+  .mat-simple-snackbar-action {
+    color: #fffffa !important;
+    font-weight: bold !important;
+  }
+}
+
+.headerRightAlign {
+  // display: flex;
+  // justify-content: flex-end;
+  // padding: 18px;
+}
+
+.headerCenterAlign {
+  // display: flex;
+  // justify-content: center;
+  // padding: 18px;
+}
+
+.cellRightAlign {
+  text-align: right !important;
+}
+
+.cellCenterAlign {
+  text-align: center !important;
+}
+
+.textWrapper {
+  white-space: normal !important;
+  word-wrap: break-word;
+  max-width: 200px !important;
+}
+
+.logo-size {
+  width: auto;
+  height: 55px;
+  margin-left: -15px;
+}
+
+.invoice-logo {
+  text-align: center !important;
+}
+
+.maxTableWidth {
+  width: 100%;
+}
+
+.topValign {
+  vertical-align: top;
+}
+
+.font-bold {
+  font-weight: 500;
+  font-size: 12px;
+}
+
+@media print {
+  body > * {
+    display: none;
+  }
+  body > #print-section {
+    display: block;
+  }
+}
+
+:host ::ng-deep .mat-sort-header-container {
+  display: flex;
+  justify-content: center;
+}
+
+.first-footer-row {
+  font-weight: bold;
+}
+
+.footer-cell {
+  padding-right: 12px !important;
+}

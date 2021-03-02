@@ -1,0 +1,187 @@
+<sp-page-layout mode="card">
+  <sp-page-layout-header>
+    <sp-breadcrumbs
+      [@fadeInRight]
+      [crumbs]="['Reports']"
+      current="Reorder"
+    ></sp-breadcrumbs>
+  </sp-page-layout-header>
+  <sp-page-layout-content [@fadeInUp]>
+    <sp-list name="Reorder Items" [columns]="columns">
+      <div class="actions">
+        <div fxLayout="row" fxLayoutAlign="start center" fxFlex>
+          <button
+            type="button"
+            mat-mini-fab
+            color="primary"
+            (click)="printReorderList()"
+          >
+            <mat-icon>print</mat-icon>
+          </button>
+        </div>
+      </div>
+      <div id="print-section">
+        <table [dataSource]="dataSource" mat-table class="maxTableWidth">
+          <ng-container matColumnDef="index">
+            <th mat-header-cell *matHeaderCellDef>#</th>
+            <td
+              mat-cell
+              *matCellDef="let element; let i = index"
+              class="item-cell"
+            >
+              {{ i + 1 }}
+            </td>
+            <td mat-footer-cell *matFooterCellDef>Total</td>
+          </ng-container>
+
+          <ng-container *ngFor="let column of columns">
+            <ng-container
+              *ngIf="column.isModelProperty"
+              [matColumnDef]="column.property"
+            >
+              <th
+                *matHeaderCellDef
+                mat-header-cell
+                [class]="column.headerClass"
+              >
+                {{ column.name }}
+              </th>
+              <td
+                *matCellDef="let row"
+                mat-cell
+                class="column.cellClass item-cell"
+              >
+                {{ row[column.property] }}
+              </td>
+              <td mat-footer-cell *matFooterCellDef></td>
+            </ng-container>
+          </ng-container>
+          <ng-container matColumnDef="stockCount">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              mat-header-cell
+              class="cellRightAlign"
+            >
+              Stock Count
+            </th>
+            <td
+              mat-cell
+              *matCellDef="let element"
+              class="cellRightAlign item-cell"
+            >
+              {{ element.stockCount }}
+            </td>
+            <td
+              mat-footer-cell
+              *matFooterCellDef
+              class="cellRightAlign footer-cell"
+            >
+              {{ getTotalStockCount() }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="itemCount">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              mat-header-cell
+              class="cellRightAlign"
+            >
+              Available Count
+            </th>
+            <td
+              mat-cell
+              *matCellDef="let element"
+              class="cellRightAlign item-cell"
+            >
+              {{ element.itemCount }}
+            </td>
+            <td
+              mat-footer-cell
+              *matFooterCellDef
+              class="cellRightAlign footer-cell"
+            >
+              {{ getTotalAvailableCount() }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="reorderCount">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              mat-header-cell
+              class="cellRightAlign"
+            >
+              Reorder Count
+            </th>
+            <td
+              mat-cell
+              *matCellDef="let element"
+              class="cellRightAlign item-cell"
+            >
+              {{ element.reorderCount }}
+            </td>
+            <td mat-footer-cell *matFooterCellDef class="cellRightAlign">
+              {{ getTotalReorderCount() }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="maxRetailPrice">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              mat-header-cell
+              class="cellRightAlign"
+            >
+              Max Retail Price (Rs.)
+            </th>
+            <td
+              mat-cell
+              *matCellDef="let element"
+              class="cellRightAlign item-cell"
+            >
+              {{ element.maxRetailPrice | number: "1.2-2" }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="manufactureDate">
+            <th mat-header-cell *matHeaderCellDef class="cellCenterAlign">
+              Manufacture Date
+            </th>
+            <td
+              mat-cell
+              *matCellDef="let element"
+              class="cellCenterAlign item-cell"
+            >
+              {{ element.manufactureDate | date: "MMM d, y" }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="expiryDate">
+            <th mat-header-cell *matHeaderCellDef class="cellCenterAlign">
+              Expiry Date
+            </th>
+            <td
+              mat-cell
+              *matCellDef="let element"
+              class="cellCenterAlign item-cell"
+            >
+              {{ element.expiryDate | date: "MMM d, y" }}
+            </td>
+          </ng-container>
+
+          <tr *matHeaderRowDef="visibleColumns" mat-header-row></tr>
+          <tr
+            *matRowDef="let row; columns: visibleColumns"
+            class="clickable route-animations-elements"
+            mat-row
+          ></tr>
+          <tr
+            mat-footer-row
+            *matFooterRowDef="visibleColumns"
+            class="first-footer-row"
+          ></tr>
+        </table>
+      </div>
+    </sp-list>
+  </sp-page-layout-content>
+</sp-page-layout>

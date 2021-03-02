@@ -1,0 +1,156 @@
+<sp-page-layout mode="card">
+  <sp-page-layout-header>
+    <sp-breadcrumbs
+      [@fadeInRight]
+      [crumbs]="['Items']"
+      current="Item Batch"
+    ></sp-breadcrumbs>
+  </sp-page-layout-header>
+  <sp-page-layout-content [@fadeInUp]>
+    <sp-list
+      name="Item Batches"
+      [columns]="columns"
+      (filterChange)="onFilterChange($event)"
+    >
+      <div class="actions">
+        <div fxLayout="row" fxLayoutAlign="start center" fxFlex>
+          <mat-icon class="sp-filter-input-icon">filter_alt</mat-icon>
+          <mat-form-field style="margin-right: 2em" appearance="standard">
+            <mat-select
+              placeholder="Item"
+              [(ngModel)]="selectedItemId"
+              (ngModelChange)="filterByItemId()"
+            >
+              <mat-option [value]="0">All Items</mat-option>
+              <mat-option *ngFor="let item of items" [value]="item.id">{{
+                item.name
+              }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div fxLayout="row" fxLayoutAlign="start center" fxFlex>
+          <button
+            class="create"
+            (click)="createItemBatch()"
+            type="button"
+            mat-mini-fab
+            color="primary"
+          >
+            <mat-icon>add</mat-icon>
+          </button>
+        </div>
+      </div>
+
+      <table [dataSource]="dataSource" mat-table matSort>
+        <ng-container matColumnDef="index">
+          <th mat-header-cell *matHeaderCellDef>#</th>
+          <td mat-cell *matCellDef="let element; let i = index">
+            {{ paginator.pageSize * paginator.pageIndex + i + 1 }}
+          </td>
+        </ng-container>
+
+        <ng-container *ngFor="let column of columns">
+          <ng-container
+            *ngIf="column.isModelProperty"
+            [matColumnDef]="column.property"
+          >
+            <th
+              *matHeaderCellDef
+              mat-header-cell
+              mat-sort-header
+              [class]="column.headerClass"
+            >
+              {{ column.name }}
+            </th>
+            <td
+              *matCellDef="let row"
+              mat-cell
+              [class]="column.cellClass"
+              [displayWith]="column.displayFn"
+            >
+              {{ row[column.property] }}
+            </td>
+          </ng-container>
+        </ng-container>
+
+        <ng-container matColumnDef="maxRetailPrice">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            mat-header-cell
+            class="cellRightAlign"
+          >
+            Max Retail Price (Rs.)
+          </th>
+          <td
+            mat-cell
+            *matCellDef="let element"
+            class="cellRightAlign item-cell"
+          >
+            {{ element.maxRetailPrice | number: "1.2-2" }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="manufactureDate">
+          <th mat-header-cell *matHeaderCellDef class="cellCenterAlign">
+            Manufacture Date
+          </th>
+          <td
+            mat-cell
+            *matCellDef="let element"
+            class="cellCenterAlign item-cell"
+          >
+            {{ element.manufactureDate | date: "MMM d, y" }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="expiryDate">
+          <th mat-header-cell *matHeaderCellDef class="cellCenterAlign">
+            Expiry Date
+          </th>
+          <td
+            mat-cell
+            *matCellDef="let element"
+            class="cellCenterAlign item-cell"
+          >
+            {{ element.expiryDate | date: "MMM d, y" }}
+          </td>
+        </ng-container>
+
+        <!-- actions Column -->
+        <ng-container matColumnDef="actions">
+          <th *matHeaderCellDef class="actions-cell" mat-header-cell></th>
+          <td *matCellDef="let row" class="actions-cell" mat-cell>
+            <button
+              matTooltip="Edit"
+              (click)="updateItemBatch(row); $event.stopPropagation()"
+              mat-icon-button
+            >
+              <mat-icon color="primary">edit</mat-icon>
+            </button>
+            <button
+              matTooltip="Delete"
+              (click)="$event.stopPropagation(); confirmDialog(row)"
+              mat-icon-button
+            >
+              <mat-icon color="warn">delete</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+        <tr *matHeaderRowDef="visibleColumns" mat-header-row></tr>
+        <tr
+          *matRowDef="let row; columns: visibleColumns"
+          class="clickable route-animations-elements"
+          mat-row
+        ></tr>
+      </table>
+
+      <mat-paginator
+        class="paginator"
+        [pageSizeOptions]="[10, 15, 20, 50, 100]"
+        [length]="recordCount"
+        (page)="loadDataSourceByPage()"
+      ></mat-paginator>
+    </sp-list>
+  </sp-page-layout-content>
+</sp-page-layout>

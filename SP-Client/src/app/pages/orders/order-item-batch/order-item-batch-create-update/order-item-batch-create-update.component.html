@@ -1,0 +1,140 @@
+<div mat-dialog-title>Item Batch</div>
+
+<form [formGroup]="form" (ngSubmit)="save()">
+  <mat-dialog-content>
+    <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap.gt-sm="24px">
+      <mat-form-field
+        fxFlex
+        appearance="standard"
+        *ngIf="form.value.orderItemBatchCode"
+      >
+        <mat-label>Order Item Batch Code</mat-label>
+        <input
+          type="text"
+          formControlName="orderItemBatchCode"
+          matInput
+          required
+          readonly
+        />
+      </mat-form-field>
+      <mat-form-field fxFlex appearance="standard">
+        <mat-label>Order</mat-label>
+        <mat-select
+          formControlName="orderId"
+          (ngModelChange)="setSelectedOrder(form.value.orderId)"
+          required
+        >
+          <mat-option *ngFor="let order of orders" [value]="order.id">{{
+            order.orderCode
+          }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap.gt-sm="24px">
+      <mat-form-field fxFlex appearance="standard">
+        <mat-label>Item Batch</mat-label>
+        <mat-select
+          formControlName="itemBatchId"
+          (ngModelChange)="setSelectedItemBatch(form.value.itemBatchId)"
+          required
+        >
+          <mat-option
+            *ngFor="let itemBatch of itemBatches"
+            [value]="itemBatch.id"
+            >{{ itemBatch.name }}</mat-option
+          >
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field fxFlex appearance="standard">
+        <mat-label>Name</mat-label>
+        <input type="text" formControlName="name" matInput required />
+      </mat-form-field>
+    </div>
+    <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap.gt-sm="24px">
+      <mat-form-field fxFlex appearance="standard">
+        <mat-label>Item Count</mat-label>
+        <input
+          type="number"
+          formControlName="itemCount"
+          matInput
+          required
+          max="{{ selectedItemBatch ? selectedItemBatch.itemCount : 100 }}"
+          (ngModelChange)="
+            setTotalNetPrice(form.value.netPrice, form.value.itemCount)
+          "
+        />
+        <mat-hint *ngIf="selectedItemBatch"
+          >{{ selectedItemBatch.itemCount }} items available</mat-hint
+        >
+      </mat-form-field>
+
+      <mat-form-field fxFlex appearance="standard">
+        <mat-label>Discount (%)</mat-label>
+        <input
+          type="number"
+          formControlName="shopOwnerDiscountRate"
+          (ngModelChange)="
+            calculatedNetItemPrice(
+              form.value.shopOwnerDiscountRate,
+              form.value.itemPrice
+            )
+          "
+          matInput
+        />
+      </mat-form-field>
+    </div>
+    <div fxLayout="column" fxLayout.gt-sm="row" fxLayoutGap.gt-sm="24px">
+      <mat-form-field fxFlex appearance="standard">
+        <mat-label>Item Price</mat-label>
+        <input
+          type="text"
+          formControlName="itemPrice"
+          readonly
+          matInput
+          required
+          currencyFormatter
+        />
+      </mat-form-field>
+      <mat-form-field fxFlex appearance="standard">
+        <mat-label>Net Price</mat-label>
+        <input
+          type="text"
+          formControlName="netPrice"
+          readonly
+          matInput
+          required
+          currencyFormatter
+        />
+      </mat-form-field>
+      <mat-form-field fxFlex appearance="standard">
+        <mat-label>Total Net Price</mat-label>
+        <input
+          type="text"
+          formControlName="totalNetPrice"
+          matInput
+          readonly
+          required
+          currencyFormatter
+        />
+      </mat-form-field>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions fxLayout="row" fxLayoutAlign="end center">
+    <button
+      *ngIf="isCreateMode()"
+      mat-button
+      [disabled]="!form.valid"
+      color="primary"
+    >
+      CREATE
+    </button>
+    <button
+      *ngIf="isUpdateMode()"
+      mat-button
+      [disabled]="!form.valid || form.pristine"
+      color="primary"
+    >
+      UPDATE
+    </button>
+  </mat-dialog-actions>
+</form>

@@ -1,0 +1,446 @@
+<sp-page-layout mode="card">
+  <sp-page-layout-header>
+    <sp-breadcrumbs
+      *ngIf="isCreateMode()"
+      [@fadeInRight]
+      [crumbs]="['Orders', 'Order']"
+      [crumbRoute]="['/orders/order']"
+      current="Create Order"
+    ></sp-breadcrumbs>
+    <sp-breadcrumbs
+      *ngIf="isUpdateMode()"
+      [@fadeInRight]
+      [crumbs]="['Orders', 'Order']"
+      [crumbRoute]="['/orders/order']"
+      current="Update Order"
+    ></sp-breadcrumbs>
+  </sp-page-layout-header>
+
+  <sp-page-layout-content [fxLayoutGap]="gap" fxLayout="column">
+    <div
+      [fxLayoutGap]="gap"
+      fxFlex="noshrink"
+      fxLayout="column"
+      fxLayout.gt-sm="row"
+      fxLayoutAlign.gt-sm="start stretch"
+    >
+      <sp-card
+        class="advanced-forms route-animations-elements"
+        [@fadeInUp]
+        fxFlex="auto"
+      >
+        <div *ngIf="form">
+          <form [formGroup]="form" (ngSubmit)="confirmSaveDialog()" fxFlex>
+            <div
+              fxLayout="column"
+              fxLayout.gt-sm="row"
+              fxLayoutGap.gt-sm="16px"
+            >
+              <div fxLayout="column" fxFlex>
+                <sp-card-header>
+                  <sp-card-header-heading>Order Details</sp-card-header-heading>
+                </sp-card-header>
+                <sp-card-content fxLayout="column" fxLayoutGap="8px">
+                  <mat-form-field
+                    fxFlex
+                    appearance="standard"
+                    *ngIf="form.value.orderCode"
+                  >
+                    <mat-label>Order Code</mat-label>
+                    <input
+                      type="text"
+                      formControlName="orderCode"
+                      matInput
+                      readonly
+                    />
+                  </mat-form-field>
+                  <div fxLayout="column" fxFlex formGroupName="orderItemBatch">
+                    <div
+                      fxLayout="column"
+                      fxLayout.gt-sm="row"
+                      fxLayoutGap.gt-sm="24px"
+                    >
+                      <mat-form-field fxFlex appearance="standard">
+                        <mat-label>Item Batch</mat-label>
+                        <mat-select
+                          formControlName="itemBatchId"
+                          (ngModelChange)="
+                            setSelectedItemBatch(
+                              form.value.orderItemBatch.itemBatchId
+                            )
+                          "
+                          required
+                        >
+                          <mat-option
+                            *ngFor="let itemBatch of itemBatches"
+                            [value]="itemBatch.id"
+                            >{{ itemBatch.name }}</mat-option
+                          >
+                        </mat-select>
+                      </mat-form-field>
+                      <mat-form-field
+                        class="sp-flex-form-field"
+                        fxFlex.gt-sm
+                        appearance="standard"
+                      >
+                        <mat-label>Name</mat-label>
+                        <input
+                          type="text"
+                          formControlName="name"
+                          matInput
+                          required
+                        />
+                      </mat-form-field>
+                    </div>
+                    <div
+                      fxLayout="column"
+                      fxLayout.gt-sm="row"
+                      fxLayoutGap.gt-sm="24px"
+                    >
+                      <mat-form-field
+                        class="sp-flex-form-field"
+                        fxFlex.gt-sm
+                        appearance="standard"
+                      >
+                        <mat-label>Item Count</mat-label>
+                        <input
+                          type="number"
+                          formControlName="itemCount"
+                          matInput
+                          required
+                          max="{{
+                            selectedItemBatch
+                              ? selectedItemBatch.itemCount
+                              : 100
+                          }}"
+                        />
+                        <mat-hint *ngIf="selectedItemBatch"
+                          >{{ selectedItemBatch.itemCount }} items
+                          available</mat-hint
+                        >
+                      </mat-form-field>
+
+                      <mat-form-field
+                        class="sp-flex-form-field"
+                        fxFlex.gt-sm
+                        appearance="standard"
+                      >
+                        <mat-label>Item Price</mat-label>
+                        <input
+                          type="text"
+                          formControlName="itemPrice"
+                          matInput
+                          readonly
+                          required
+                          currencyFormatter
+                        />
+                      </mat-form-field>
+                    </div>
+                    <div
+                      fxLayout="column"
+                      fxLayout.gt-sm="row"
+                      fxLayoutGap.gt-sm="24px"
+                    >
+                      <mat-form-field fxFlex appearance="standard">
+                        <mat-label>Discount (%)</mat-label>
+                        <input
+                          type="number"
+                          formControlName="shopOwnerDiscountRate"
+                          (ngModelChange)="
+                            calculatedNetItemPrice(
+                              form.value.orderItemBatch.shopOwnerDiscountRate,
+                              form.value.orderItemBatch.itemPrice
+                            )
+                          "
+                          matInput
+                        />
+                      </mat-form-field>
+                      <mat-form-field
+                        class="sp-flex-form-field"
+                        fxFlex.gt-sm
+                        appearance="standard"
+                      >
+                        <mat-label>Net Price</mat-label>
+                        <input
+                          type="text"
+                          formControlName="netPrice"
+                          readonly
+                          matInput
+                          required
+                          currencyFormatter
+                        />
+                      </mat-form-field>
+                    </div>
+                    <div fxLayoutAlign="end center">
+                      <button
+                        type="button"
+                        mat-mini-fab
+                        color="accent"
+                        mat-raised-button
+                        [disabled]="form.invalid"
+                        (click)="AddOrderItemBatch(form.value.orderItemBatch)"
+                      >
+                        <mat-icon>add</mat-icon>
+                      </button>
+                    </div>
+                  </div>
+                </sp-card-content>
+              </div>
+              <div fxLayout="column" fxFlex>
+                <sp-card-header>
+                  <sp-card-header-heading>&nbsp;</sp-card-header-heading>
+                </sp-card-header>
+                <sp-card-content fxLayout="column">
+                  <div
+                    fxLayout="column"
+                    fxLayout.gt-sm="row"
+                    fxLayoutGap.gt-sm="24px"
+                  >
+                    <mat-form-field
+                      class="sp-flex-form-field"
+                      fxFlex.gt-sm
+                      appearance="standard"
+                    >
+                      <mat-label>Total Amount</mat-label>
+                      <input
+                        type="text"
+                        formControlName="totalAmount"
+                        matInput
+                        readonly
+                        required
+                        currencyFormatter
+                      />
+                    </mat-form-field>
+                  </div>
+                  <div
+                    fxLayout="column"
+                    fxLayout.gt-sm="row"
+                    fxLayoutGap.gt-sm="24px"
+                  >
+                    <mat-form-field
+                      class="sp-flex-form-field"
+                      fxFlex.gt-sm
+                      appearance="standard"
+                    >
+                      <mat-label>Total Bill Discount (%)</mat-label>
+                      <input
+                        type="number"
+                        formControlName="totalBillDiscount"
+                        (ngModelChange)="
+                          calculatedTotalNetAmountPrice(
+                            form.value.totalBillDiscount,
+                            form.value.totalAmount
+                          )
+                        "
+                        matInput
+                      />
+                    </mat-form-field>
+                    <mat-form-field
+                      class="sp-flex-form-field"
+                      fxFlex.gt-sm
+                      appearance="standard"
+                    >
+                      <mat-label> Discount Amount (Rs.)</mat-label>
+                      <input
+                        type="text"
+                        formControlName="totalDiscountAmount"
+                        matInput
+                        readonly
+                        currencyFormatter
+                      />
+                    </mat-form-field>
+                  </div>
+                  <div
+                    fxLayout="column"
+                    fxLayout.gt-sm="row"
+                    fxLayoutGap.gt-sm="24px"
+                  >
+                    <mat-form-field
+                      class="sp-flex-form-field"
+                      fxFlex.gt-sm
+                      appearance="standard"
+                    >
+                      <mat-label>Net Total Amount</mat-label>
+                      <input
+                        type="text"
+                        formControlName="totalNetAmount"
+                        matInput
+                        readonly
+                        required
+                        currencyFormatter
+                      />
+                    </mat-form-field>
+                  </div>
+                </sp-card-content>
+              </div>
+            </div>
+            <div fxLayout="column" fxLayout.gt-sm="row">
+              <mat-hint *ngIf="orderItemBatches.length == 0"
+                >&emsp;Add at least one item to proceed.</mat-hint
+              >
+              <table
+                [dataSource]="dataSource"
+                mat-table
+                matSort
+                width="100%"
+                *ngIf="orderItemBatches.length > 0"
+              >
+                <!-- fullName Column -->
+                <ng-container *ngFor="let column of columns">
+                  <ng-container
+                    *ngIf="column.isModelProperty && !column.isList"
+                    [matColumnDef]="column.property"
+                  >
+                    <th
+                      *matHeaderCellDef
+                      mat-header-cell
+                      [class]="column.headerClass"
+                    >
+                      {{ column.name }}
+                    </th>
+                    <td
+                      *matCellDef="let row"
+                      mat-cell
+                      [class]="column.cellClass"
+                    >
+                      {{ row[column.property] }}
+                      <!-- {{ column.displayFn }} -->
+                    </td>
+                  </ng-container>
+                </ng-container>
+
+                <ng-container matColumnDef="itemPrice">
+                  <th mat-header-cell *matHeaderCellDef class="cellRightAlign">
+                    Item Price (Rs.)
+                  </th>
+                  <td
+                    mat-cell
+                    *matCellDef="let element"
+                    class="cellRightAlign item-cell"
+                  >
+                    {{ element.itemPrice | number: "1.2-2" }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="shopOwnerDiscountRate">
+                  <th mat-header-cell *matHeaderCellDef class="cellRightAlign">
+                    Discount (Rs.)
+                  </th>
+                  <td
+                    mat-cell
+                    *matCellDef="let element"
+                    class="cellRightAlign item-cell"
+                  >
+                    {{ element.itemPrice - element.netPrice | number: "1.2-2" }}
+                    {{
+                      element.shopOwnerDiscountRate > 0
+                        ? "(" + element.shopOwnerDiscountRate + "%)"
+                        : ""
+                    }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="netPrice">
+                  <th mat-header-cell *matHeaderCellDef class="cellRightAlign">
+                    Net Price (Rs.)
+                  </th>
+                  <td
+                    mat-cell
+                    *matCellDef="let element"
+                    class="cellRightAlign item-cell"
+                  >
+                    {{ element.netPrice | number: "1.2-2" }}
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="totalNetPrice">
+                  <th mat-header-cell *matHeaderCellDef class="cellRightAlign">
+                    Total Net Price (Rs.)
+                  </th>
+                  <td
+                    mat-cell
+                    *matCellDef="let element"
+                    class="cellRightAlign item-cell"
+                  >
+                    {{ element.totalNetPrice | number: "1.2-2" }}
+                  </td>
+                </ng-container>
+
+                <!-- actions Column -->
+                <ng-container matColumnDef="actions">
+                  <th
+                    *matHeaderCellDef
+                    class="actions-cell cellCenterAlign"
+                    mat-header-cell
+                    mat-sort-header
+                  ></th>
+                  <td
+                    *matCellDef="let row; let i = index"
+                    class="actions-cell cellCenterAlign"
+                    mat-cell
+                  >
+                    <button
+                      type="button"
+                      matTooltip="Remove"
+                      (click)="
+                        removeOrderItemBatch(i, row); $event.stopPropagation()
+                      "
+                      mat-icon-button
+                    >
+                      <mat-icon color="warn">delete</mat-icon>
+                    </button>
+                  </td>
+                </ng-container>
+                <tr *matHeaderRowDef="visibleColumns" mat-header-row></tr>
+                <tr
+                  *matRowDef="let row; columns: visibleColumns"
+                  class="clickable route-animations-elements"
+                  mat-row
+                ></tr>
+              </table>
+            </div>
+            <sp-card-actions
+              fxLayout="row"
+              fxLayoutAlign="end center"
+              fxLayoutGap="8px"
+            >
+              <button
+                *ngIf="isCreateMode()"
+                [disabled]="form.pristine"
+                color="primary"
+                mat-button
+                type="reset"
+              >
+                RESET
+              </button>
+              <button
+                *ngIf="isCreateMode()"
+                mat-button
+                [disabled]="orderItemBatches.length == 0"
+                color="primary"
+                mat-raised-button
+              >
+                CREATE
+              </button>
+              <button
+                *ngIf="isUpdateMode()"
+                mat-button
+                [disabled]="orderItemBatches.length == 0"
+                color="primary"
+                mat-raised-button
+              >
+                UPDATE
+              </button>
+            </sp-card-actions>
+          </form>
+        </div>
+      </sp-card>
+    </div>
+  </sp-page-layout-content>
+</sp-page-layout>
+
+<sp-order-invoice
+  style="display: none"
+  [invoiceDetails]="printData"
+  *ngIf="isSubmitClick"
+></sp-order-invoice>

@@ -1,0 +1,43 @@
+<sp-card [style.background]="options.background" [style.color]="options.color">
+  <sp-card-header class="header">
+    <sp-card-header-heading [style.color]="options.color">{{
+      options.title
+    }}</sp-card-header-heading>
+    <sp-card-header-subheading [style.color]="options.color" class="subheading">
+      <mat-icon *ngIf="options.gain >= 0">arrow_upward</mat-icon>
+      <mat-icon *ngIf="options.gain < 0">arrow_downward</mat-icon>
+      {{ options.gain }}% {{ options.subTitle }}
+    </sp-card-header-subheading>
+
+    <sp-card-header-actions>
+      <button (click)="reload()" mat-icon-button>
+        <mat-icon>refresh</mat-icon>
+      </button>
+      <button [matMenuTriggerFor]="menu" mat-icon-button>
+        <mat-icon>more_vert</mat-icon>
+      </button>
+    </sp-card-header-actions>
+  </sp-card-header>
+
+  <sp-card-content class="card-content">
+    <canvas
+      *ngIf="data"
+      [datasets]="data.datasets"
+      [labels]="data.labels"
+      [legend]="false"
+      [options]="chartOptions"
+      baseChart
+      chartType="bar"
+    >
+    </canvas>
+  </sp-card-content>
+
+  <sp-loading-overlay [isLoading]="isLoading"></sp-loading-overlay>
+</sp-card>
+
+<mat-menu #menu="matMenu">
+  <button mat-menu-item routerLink="orders/order" routerLinkActive="active">
+    <mat-icon> more</mat-icon>
+    <span> More Info </span>
+  </button>
+</mat-menu>

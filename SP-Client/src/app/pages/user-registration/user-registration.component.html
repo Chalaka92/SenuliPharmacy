@@ -1,0 +1,86 @@
+<sp-page-layout mode="card">
+  <sp-page-layout-header>
+    <sp-breadcrumbs [@fadeInRight] current="User Registration"></sp-breadcrumbs>
+  </sp-page-layout-header>
+
+  <sp-page-layout-content [@fadeInUp]>
+    <sp-list
+      name="Users"
+      [columns]="columns"
+      (filterChange)="onFilterChange($event)"
+    >
+      <table [dataSource]="dataSource" mat-table matSort>
+        <ng-container matColumnDef="index">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>#</th>
+          <td mat-cell *matCellDef="let element; let i = index">
+            {{ paginator.pageSize * paginator.pageIndex + i + 1 }}
+          </td>
+        </ng-container>
+
+        <!-- fullName Column -->
+        <ng-container *ngFor="let column of columns">
+          <ng-container
+            *ngIf="column.isModelProperty && !column.isList"
+            [matColumnDef]="column.property"
+          >
+            <th *matHeaderCellDef mat-header-cell mat-sort-header>
+              {{ column.name }}
+            </th>
+            <td *matCellDef="let row" mat-cell>
+              {{ row[column.property] }}
+            </td>
+          </ng-container>
+          <ng-container
+            *ngIf="column.isModelProperty && column.isList"
+            [matColumnDef]="column.property"
+          >
+            <th *matHeaderCellDef mat-header-cell mat-sort-header>
+              {{ column.name }}
+            </th>
+            <td *matCellDef="let row" mat-cell>
+              {{ row[column.property][0].email }}
+            </td>
+          </ng-container>
+        </ng-container>
+
+        <!-- actions Column -->
+        <ng-container matColumnDef="actions">
+          <th
+            *matHeaderCellDef
+            class="actions-cell"
+            mat-header-cell
+            mat-sort-header
+          ></th>
+          <td *matCellDef="let row" class="actions-cell" mat-cell>
+            <button
+              *ngIf="!row.loggedUserId"
+              matTooltip="Register"
+              (click)="confirmDialog(row); $event.stopPropagation()"
+              mat-icon-button
+            >
+              <mat-icon color="primary">person_add_alt_1</mat-icon>
+            </button>
+            <button
+              *ngIf="row.loggedUserId"
+              matTooltip="Registered"
+              mat-icon-button
+            >
+              <mat-icon>how_to_reg</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+        <tr *matHeaderRowDef="visibleColumns" mat-header-row></tr>
+        <tr
+          *matRowDef="let row; columns: visibleColumns"
+          class="clickable route-animations-elements"
+          mat-row
+        ></tr>
+      </table>
+
+      <mat-paginator
+        class="paginator"
+        [pageSizeOptions]="[10, 15, 20, 50, 100]"
+      ></mat-paginator>
+    </sp-list>
+  </sp-page-layout-content>
+</sp-page-layout>

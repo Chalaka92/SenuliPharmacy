@@ -1,0 +1,387 @@
+<sp-page-layout mode="card">
+  <sp-page-layout-header>
+    <sp-breadcrumbs
+      *ngIf="isCreateMode()"
+      [@fadeInRight]
+      [crumbs]="['Users']"
+      [crumbRoute]="['/users']"
+      current="Create User"
+    ></sp-breadcrumbs>
+    <sp-breadcrumbs
+      *ngIf="isUpdateMode()"
+      [@fadeInRight]
+      [crumbs]="['Users']"
+      [crumbRoute]="['/users']"
+      current="Update User"
+    ></sp-breadcrumbs>
+  </sp-page-layout-header>
+
+  <sp-page-layout-content [fxLayoutGap]="gap" fxLayout="column">
+    <div
+      [fxLayoutGap]="gap"
+      fxFlex="noshrink"
+      fxLayout="column"
+      fxLayout.gt-sm="row"
+      fxLayoutAlign.gt-sm="start stretch"
+    >
+      <sp-card
+        class="advanced-forms route-animations-elements"
+        [@fadeInUp]
+        fxFlex="auto"
+      >
+        <div *ngIf="form">
+          <form [formGroup]="form" (ngSubmit)="save()" fxFlex>
+            <div
+              fxLayout="column"
+              fxLayout.gt-sm="row"
+              fxLayoutGap.gt-sm="16px"
+            >
+              <div fxLayout="column" fxFlex>
+                <sp-card-header>
+                  <sp-card-header-heading>User Details</sp-card-header-heading>
+                </sp-card-header>
+                <sp-card-content fxLayout="column" fxLayoutGap="8px">
+                  <div class="result" fxLayout="column">
+                    <mat-form-field
+                      fxFlex
+                      appearance="standard"
+                      *ngIf="form.value.userCode"
+                    >
+                      <mat-label>User Code</mat-label>
+                      <input
+                        type="text"
+                        formControlName="userCode"
+                        matInput
+                        readonly
+                      />
+                    </mat-form-field>
+                    <div
+                      fxLayout="column"
+                      fxLayout.gt-sm="row"
+                      fxLayoutGap.gt-sm="16px"
+                    >
+                      <mat-form-field
+                        class="sp-flex-form-field"
+                        fxFlex.gt-sm
+                        appearance="standard"
+                      >
+                        <mat-label>First Name</mat-label>
+                        <input
+                          type="text"
+                          formControlName="firstName"
+                          matInput
+                          required
+                        />
+                      </mat-form-field>
+                      <mat-form-field
+                        class="sp-flex-form-field"
+                        fxFlex.gt-sm
+                        appearance="standard"
+                      >
+                        <mat-label>Middle Name</mat-label>
+                        <input
+                          type="text"
+                          formControlName="middleName"
+                          matInput
+                        />
+                      </mat-form-field>
+                      <mat-form-field
+                        class="sp-flex-form-field"
+                        fxFlex.gt-sm
+                        appearance="standard"
+                      >
+                        <mat-label>Last Name</mat-label>
+                        <input
+                          type="text"
+                          formControlName="lastName"
+                          matInput
+                          required
+                        />
+                      </mat-form-field>
+                    </div>
+
+                    <mat-form-field fxFlex appearance="standard">
+                      <mat-label>Role</mat-label>
+                      <mat-select formControlName="roleId" required>
+                        <mat-option
+                          *ngFor="let role of roles"
+                          [value]="role.id"
+                          >{{ role.name }}</mat-option
+                        >
+                      </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field fxFlex appearance="standard">
+                      <mat-label>NIC/Passport</mat-label>
+                      <input
+                        type="text"
+                        formControlName="nic"
+                        matInput
+                        required
+                      />
+                    </mat-form-field>
+
+                    <mat-form-field fxFlex appearance="standard">
+                      <mat-label>Birthday</mat-label>
+                      <input
+                        (click)="formDatepickerRef.open()"
+                        formControlName="birthday"
+                        (focus)="formDatepickerRef.open()"
+                        [matDatepicker]="formDatepickerRef"
+                        matInput
+                        readonly
+                        required
+                      />
+                      <mat-datepicker-toggle
+                        [for]="formDatepickerRef"
+                        matSuffix
+                      ></mat-datepicker-toggle>
+                      <mat-hint
+                        >Click on the input or the datepicker icon</mat-hint
+                      >
+                      <mat-datepicker #formDatepickerRef></mat-datepicker>
+                    </mat-form-field>
+                  </div>
+                </sp-card-content>
+              </div>
+              <div fxLayout="column" fxFlex>
+                <sp-card-header>
+                  <sp-card-header-heading
+                    >Contact Details</sp-card-header-heading
+                  >
+                </sp-card-header>
+                <sp-card-content fxLayout="column">
+                  <div formArrayName="userAddresses">
+                    <div
+                      *ngFor="let item of defaults.userAddresses; let i = index"
+                      [formGroupName]="i"
+                    >
+                      <div
+                        fxLayout="column"
+                        fxLayout.gt-sm="row"
+                        fxLayoutGap.gt-sm="16px"
+                      >
+                        <mat-form-field
+                          class="sp-flex-form-field"
+                          fxFlex.gt-sm
+                          appearance="standard"
+                        >
+                          <mat-label>Address 1</mat-label>
+                          <input
+                            type="text"
+                            formControlName="address1"
+                            matInput
+                            required
+                          />
+                        </mat-form-field>
+                        <mat-form-field
+                          class="sp-flex-form-field"
+                          fxFlex.gt-sm
+                          appearance="standard"
+                        >
+                          <mat-label>Address 2</mat-label>
+                          <input
+                            type="text"
+                            formControlName="address2"
+                            matInput
+                          />
+                        </mat-form-field>
+                        <mat-form-field
+                          class="sp-flex-form-field"
+                          fxFlex.gt-sm
+                          appearance="standard"
+                        >
+                          <mat-label>Address 3</mat-label>
+                          <input
+                            type="text"
+                            formControlName="address3"
+                            matInput
+                          />
+                        </mat-form-field>
+                      </div>
+                      <div
+                        fxLayout="column"
+                        fxLayout.gt-sm="row"
+                        fxLayoutGap.gt-sm="16px"
+                      >
+                        <mat-form-field fxFlex appearance="standard">
+                          <mat-label>Province</mat-label>
+                          <mat-select
+                            formControlName="provinceId"
+                            (ngModelChange)="
+                              setSelectedProvince(
+                                form.value.userAddresses[i].provinceId
+                              )
+                            "
+                            required
+                          >
+                            <mat-option
+                              *ngFor="let province of provinces"
+                              [value]="province.id"
+                              >{{ province.name }}</mat-option
+                            >
+                          </mat-select>
+                        </mat-form-field>
+                        <mat-form-field fxFlex appearance="standard">
+                          <mat-label>District</mat-label>
+                          <mat-select formControlName="districtId" required>
+                            <mat-option
+                              *ngFor="let district of districts"
+                              [value]="district.id"
+                              >{{ district.name }}</mat-option
+                            >
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+                      <div
+                        fxLayout="column"
+                        fxLayout.gt-sm="row"
+                        fxLayoutGap.gt-sm="16px"
+                      >
+                        <mat-form-field fxFlex appearance="standard">
+                          <mat-label>Latitude</mat-label>
+                          <input
+                            type="number"
+                            formControlName="locationLatitude"
+                            matInput
+                          />
+                        </mat-form-field>
+                        <mat-form-field fxFlex appearance="standard">
+                          <mat-label>Longitude</mat-label>
+                          <input
+                            type="number"
+                            formControlName="locationLongitude"
+                            matInput
+                          />
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div fxLayout="row" formArrayName="userEmails">
+                    <div fxLayout="column" fxFlex>
+                      <div
+                        *ngFor="let item of defaults.userEmails; let i = index"
+                        [formGroupName]="i"
+                      >
+                        <mat-form-field fxFlex appearance="standard">
+                          <mat-label>Email {{ i + 1 }}</mat-label>
+                          <input
+                            type="email"
+                            formControlName="email"
+                            matInput
+                            required
+                          /><mat-hint>e.g. david@example.com</mat-hint>
+                          <button
+                            (click)="RemoveEmail(i)"
+                            mat-icon-button
+                            matSuffix
+                            type="button"
+                          >
+                            <mat-icon>close</mat-icon>
+                          </button>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div
+                      fxLayout="row"
+                      fxLayoutAlign="start center"
+                      style="vertical-align: top"
+                    >
+                      <button
+                        style="margin-left: 2em"
+                        class="create"
+                        type="button"
+                        mat-mini-fab
+                        (click)="AddEmail()"
+                      >
+                        <mat-icon>add</mat-icon>
+                      </button>
+                    </div>
+                  </div>
+                  <div fxLayout="row" formArrayName="userContacts">
+                    <div fxLayout="column" fxFlex>
+                      <div
+                        *ngFor="
+                          let item of defaults.userContacts;
+                          let i = index
+                        "
+                        [formGroupName]="i"
+                      >
+                        <mat-form-field fxFlex appearance="standard">
+                          <mat-label>Phone {{ i + 1 }}</mat-label>
+                          <input
+                            type="email"
+                            formControlName="contactNo"
+                            matInput
+                            required
+                          />
+                          <button
+                            (click)="RemoveContact(i)"
+                            mat-icon-button
+                            matSuffix
+                            type="button"
+                          >
+                            <mat-icon>close</mat-icon>
+                          </button>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                    <div
+                      fxLayout="row"
+                      fxLayoutAlign="start center"
+                      style="vertical-align: top"
+                    >
+                      <button
+                        style="margin-left: 2em"
+                        class="create"
+                        type="button"
+                        mat-mini-fab
+                        (click)="AddContact()"
+                      >
+                        <mat-icon>add</mat-icon>
+                      </button>
+                    </div>
+                  </div>
+                </sp-card-content>
+              </div>
+            </div>
+            <sp-card-actions
+              fxLayout="row"
+              fxLayoutAlign="end center"
+              fxLayoutGap="8px"
+            >
+              <button
+                *ngIf="isCreateMode()"
+                [disabled]="form.pristine"
+                color="primary"
+                mat-button
+                type="reset"
+              >
+                RESET
+              </button>
+              <button
+                *ngIf="isCreateMode()"
+                mat-button
+                [disabled]="form.invalid"
+                color="primary"
+                mat-raised-button
+              >
+                CREATE
+              </button>
+              <button
+                *ngIf="isUpdateMode()"
+                mat-button
+                [disabled]="form.invalid || form.pristine"
+                color="primary"
+                mat-raised-button
+              >
+                UPDATE
+              </button>
+            </sp-card-actions>
+          </form>
+        </div>
+      </sp-card>
+    </div>
+  </sp-page-layout-content>
+</sp-page-layout>

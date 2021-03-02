@@ -1,0 +1,110 @@
+<sp-page-layout mode="card">
+  <sp-page-layout-header>
+    <sp-breadcrumbs
+      [@fadeInRight]
+      [crumbs]="['Districts']"
+      current="District"
+    ></sp-breadcrumbs>
+  </sp-page-layout-header>
+  <sp-page-layout-content [@fadeInUp]>
+    <sp-list
+      name="Districts"
+      [columns]="columns"
+      (filterChange)="onFilterChange($event)"
+    >
+      <div class="actions">
+        <div fxLayout="row" fxLayoutAlign="start center" fxFlex>
+          <mat-icon class="sp-filter-input-icon">filter_alt</mat-icon>
+          <mat-form-field style="margin-right: 2em" appearance="standard">
+            <mat-select
+              placeholder="Province"
+              [(ngModel)]="selectedProvinceId"
+              (ngModelChange)="filterByProvinceId()"
+            >
+              <mat-option [value]="0">All Provinces</mat-option>
+              <mat-option
+                *ngFor="let province of provinces"
+                [value]="province.id"
+                >{{ province.name }}</mat-option
+              >
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div fxLayout="row" fxLayoutAlign="start center" fxFlex>
+          <button
+            class="create"
+            (click)="createDistrict()"
+            type="button"
+            mat-mini-fab
+            color="primary"
+          >
+            <mat-icon>add</mat-icon>
+          </button>
+        </div>
+      </div>
+
+      <table [dataSource]="dataSource" mat-table matSort>
+        <ng-container matColumnDef="index">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>#</th>
+          <td mat-cell *matCellDef="let element; let i = index">
+            {{ paginator.pageSize * paginator.pageIndex + i + 1 }}
+          </td>
+        </ng-container>
+
+        <!-- fullName Column -->
+        <ng-container *ngFor="let column of columns">
+          <ng-container
+            *ngIf="column.isModelProperty"
+            [matColumnDef]="column.property"
+          >
+            <th *matHeaderCellDef mat-header-cell mat-sort-header>
+              {{ column.name }}
+            </th>
+            <td *matCellDef="let row" mat-cell>
+              {{ row[column.property] }}
+            </td>
+          </ng-container>
+        </ng-container>
+
+        <!-- actions Column -->
+        <ng-container matColumnDef="actions">
+          <th
+            *matHeaderCellDef
+            class="actions-cell"
+            mat-header-cell
+            mat-sort-header
+          ></th>
+          <td *matCellDef="let row" class="actions-cell" mat-cell>
+            <button
+              matTooltip="Edit"
+              (click)="updateDistrict(row); $event.stopPropagation()"
+              mat-icon-button
+            >
+              <mat-icon color="primary">edit</mat-icon>
+            </button>
+            <button
+              matTooltip="Delete"
+              (click)="$event.stopPropagation(); confirmDialog(row)"
+              mat-icon-button
+            >
+              <mat-icon color="warn">delete</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+        <tr *matHeaderRowDef="visibleColumns" mat-header-row></tr>
+        <tr
+          *matRowDef="let row; columns: visibleColumns"
+          class="clickable route-animations-elements"
+          mat-row
+        ></tr>
+      </table>
+
+      <mat-paginator
+        class="paginator"
+        [pageSizeOptions]="[10, 15, 20, 50, 100]"
+        [length]="recordCount"
+        (page)="loadDataSourceByPage()"
+      ></mat-paginator>
+    </sp-list>
+  </sp-page-layout-content>
+</sp-page-layout>

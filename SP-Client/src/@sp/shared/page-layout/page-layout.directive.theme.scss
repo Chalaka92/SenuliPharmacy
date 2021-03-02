@@ -1,0 +1,23 @@
+.sp-page-layout {
+}
+
+.sp-page-layout-header {
+  background: $theme-color-primary;
+  color: $theme-color-primary-contrast;
+
+  sp-breadcrumbs {
+    .crumb,
+    .link {
+      color: $light-secondary-text;
+
+      &:hover {
+        color: $light-primary-text;
+      }
+    }
+
+    .crumb.current,
+    .crumb.current .link {
+      color: $light-primary-text;
+    }
+  }
+}
