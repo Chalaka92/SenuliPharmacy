@@ -19,7 +19,6 @@ import {
 import { ErrorInterceptor } from "./_helpers/error.interceptor";
 import { JwtInterceptor } from "./_helpers/jwt.interceptor";
 import { fakeBackendProvider } from "./_helpers/fake-backend";
-import { CurrencyFormatterDirective } from "./common/currency-formatter/currency-formatter.directive";
 
 @NgModule({
   imports: [
