@@ -1,6 +1,4 @@
-import { Component, Inject, Input, OnInit } from "@angular/core";
-import { FormGroup, FormBuilder } from "@angular/forms";
-import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
+import { Component, Input, OnInit } from "@angular/core";
 import { MatTableDataSource } from "@angular/material/table";
 import { Order } from "@app/_models/order";
 
@@ -22,14 +20,7 @@ export class OrderInvoiceComponent implements OnInit {
   ];
   mode: string;
 
-  constructor(/*@Inject(MAT_DIALOG_DATA) public defaults: any*/) {
-    // private dialogRef: MatDialogRef<OrderInvoiceComponent> // @Inject(MAT_DIALOG_DATA) public defaults: any,
-    // this.orderInvoiceDetails = defaults.orderInvoiceDetails;
-    // this.orderInvoiceDetails.totalDiscountAmount =
-    //   this.orderInvoiceDetails.totalAmount -
-    //   this.orderInvoiceDetails.totalNetAmount;
-    // this.mode = defaults.mode;
-  }
+  constructor() {}
 
   ngOnInit() {
     if (this.invoiceDetails) {
@@ -49,14 +40,6 @@ export class OrderInvoiceComponent implements OnInit {
         this.orderInvoiceDetails.totalAmount -
         this.orderInvoiceDetails.totalNetAmount;
       this.mode = this.invoiceDetails.mode;
-      console.log(this.orderInvoiceDetails.totalAmount);
-      console.log(this.orderInvoiceDetails.totalNetAmount);
-      // if (!this.defaults.orderInvoiceDetails)
-      //   this.defaults.orderInvoiceDetails = {} as Order;
-
-      // this.dataSource = new MatTableDataSource();
-
-      // this.dataSource.data = this.defaults.orderInvoiceDetails.orderItemBatches;
 
       this.dataSource = new MatTableDataSource();
 
@@ -65,9 +48,11 @@ export class OrderInvoiceComponent implements OnInit {
   }
 
   onPrint() {
-    let printHtml = document.getElementById("print-section").cloneNode(true);
-    document.body.appendChild(printHtml);
-    window.print();
-    document.body.removeChild(printHtml);
+    setTimeout(function () {
+      let printHtml = document.getElementById("print-section").cloneNode(true);
+      document.body.appendChild(printHtml);
+      window.print();
+      document.body.removeChild(printHtml);
+    }, 500);
   }
 }
