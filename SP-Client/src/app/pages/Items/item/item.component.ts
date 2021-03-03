@@ -187,7 +187,7 @@ export class ItemComponent implements OnInit, OnDestroy {
     }
   }
 
-  onFilterChange(value) {
+  onFilterChange(value: string) {
     if (!this.dataSource) {
       return;
     }
@@ -196,7 +196,7 @@ export class ItemComponent implements OnInit, OnDestroy {
     this.dataSource.filter = value;
   }
 
-  confirmDialog(item): void {
+  confirmDialog(item: any): void {
     const message = `Are you sure you want to delete this?`;
 
     const dialogData = {
