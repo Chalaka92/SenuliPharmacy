@@ -17,6 +17,7 @@ export class ItemBatch {
   maxRetailPrice: number;
   manufactureDate: string;
   expiryDate: string;
+  scale: string;
 
   constructor(itemBatch) {
     this.id = itemBatch.id;
@@ -32,5 +33,6 @@ export class ItemBatch {
     this.maxRetailPrice = itemBatch.maxRetailPrice;
     this.manufactureDate = itemBatch.manufactureDate;
     this.expiryDate = itemBatch.expiryDate;
+    this.scale = itemBatch.scale;
   }
 }
