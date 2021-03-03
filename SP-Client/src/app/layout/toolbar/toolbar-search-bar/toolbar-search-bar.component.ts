@@ -1,12 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import { NavigationEnd, Router } from '@angular/router';
-import { SidenavItem } from '../../sidenav/sidenav-item/sidenav-item.interface';
-import { SidenavService } from '../../sidenav/sidenav.service';
+import { Component, OnInit } from "@angular/core";
+import { NavigationEnd, Router } from "@angular/router";
+import { SidenavItem } from "../../sidenav/sidenav-item/sidenav-item.interface";
+import { SidenavService } from "../../sidenav/sidenav.service";
 
 @Component({
-  selector: 'sp-toolbar-search-bar',
-  templateUrl: './toolbar-search-bar.component.html',
-  styleUrls: ['./toolbar-search-bar.component.scss'],
+  selector: "sp-toolbar-search-bar",
+  templateUrl: "./toolbar-search-bar.component.html",
+  styleUrls: ["./toolbar-search-bar.component.scss"],
 })
 export class ToolbarSearchBarComponent implements OnInit {
   input: string;
@@ -42,21 +42,21 @@ export class ToolbarSearchBarComponent implements OnInit {
   }
 
   setupDemoData() {
-    const formWizard = this.sidenavService.getItemByRoute('/forms/form-wizard');
+    const formWizard = this.sidenavService.getItemByRoute("/forms/form-wizard");
     if (formWizard) this.recentlyVisited.push(formWizard);
 
-    const inbox = this.sidenavService.getItemByRoute('/apps/inbox');
+    const inbox = this.sidenavService.getItemByRoute("/apps/inbox");
     if (inbox) this.recentlyVisited.push(inbox);
 
     const allInOneTable = this.sidenavService.getItemByRoute(
-      '/tables/all-in-one-table'
+      "/tables/all-in-one-table"
     );
     if (allInOneTable) this.recentlyVisited.push(allInOneTable);
 
-    const editor = this.sidenavService.getItemByRoute('/editor');
+    const editor = this.sidenavService.getItemByRoute("/editor");
     if (editor) this.recentlyVisited.push(editor);
 
-    const googleMaps = this.sidenavService.getItemByRoute('/maps/google-maps');
+    const googleMaps = this.sidenavService.getItemByRoute("/maps/google-maps");
     if (googleMaps) this.recentlyVisited.push(googleMaps);
   }
 
